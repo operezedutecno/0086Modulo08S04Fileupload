@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const fileupload = require("express-fileupload");
 const { v4: uuid } = require("uuid");
 const app = express();
@@ -15,6 +16,8 @@ app.listen(port, () => console.log(`Aplicación en ejecución, por el puerto ${p
 app.get("/", (request, response) => {
     response.sendFile(`${__dirname}/views/index.html`)
 })
+
+const imgPublic = `${__dirname}/public/images`;
 
 app.post("/registro", async (request, response) => {
     console.log(request.body);
@@ -35,9 +38,10 @@ app.post("/registro", async (request, response) => {
 
         await archivo.mv(`${__dirname}/public/images/${filename}${ext}`);
     }
-    
-
-    
-
     response.json({ message: "Registro exitoso"});
+})
+
+app.get("/imagenes", (request, response) => {
+    const imagenes = fs.readdirSync(imgPublic);
+    response.json({ message: "Listado de imágenes", data: imagenes });
 })
