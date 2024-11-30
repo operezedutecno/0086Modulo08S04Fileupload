@@ -45,3 +45,11 @@ app.get("/imagenes", (request, response) => {
     const imagenes = fs.readdirSync(imgPublic);
     response.json({ message: "Listado de imágenes", data: imagenes });
 })
+
+app.delete("/imagenes/:nombre", (request, response) => {
+    if(!fs.existsSync(`${imgPublic}/${request.params.nombre}`)) {
+        return response.status(404).json({ message: "La imagen no existe"});
+    }
+    fs.unlinkSync(`${imgPublic}/${request.params.nombre}`)
+    response.json({ message: "Eliminación exitosa"});
+})

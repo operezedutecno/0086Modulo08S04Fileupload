@@ -17,6 +17,21 @@ $(() => {
              
     });
 
+    $(document).on("click",".icon-delete", function() {
+        const nombre = $(this).data("img");
+        if(confirm("¿Seguro desea eliminar esta imagen?")) {
+            fetch(`/imagenes/${nombre}`, {
+                method: "DELETE"
+            }).then((data) => {
+                return data.json();
+            }).then(response => {
+                listarImagenes();
+            }).catch(error => {
+                alert("Ocurrió un error en el servidor, intente nuevamente.");
+            })
+        }
+    })
+
     const obtenerImagenes = () => {
         return new Promise((resolve, reject) => {
             fetch("/imagenes", {
@@ -32,8 +47,9 @@ $(() => {
         $("#content-images").html("");
         imagenes.data.forEach(element => {
             $("#content-images").append(`
-                <div class='col-3'>
+                <div class='col-4' style="position: relative;">
                     <img src='/public/images/${element}' class='img-thumbnail'>
+                    <img src='/public/icons/eliminar.png' class='icon-delete' data-img="${element}">
                 </div>    
             `);
         });
